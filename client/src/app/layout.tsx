@@ -9,6 +9,7 @@ import {
   UserButton
 } from '@clerk/nextjs'
 import Link from "next/link";
+import Header from "@/components/Header/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,19 +27,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
       <body className={inter.className}>
-      <header>
-          <nav>
-            <ul>
-              <li><Link href="/sign-up">Sign In</Link></li>
-              <li><Link href="/sign-in">Sign Up</Link></li>
-            </ul>
-          </nav>
-        </header>
-      
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
+      <Header />
+        <main>
         {children}
+        </main>
       </body>
       </html>
     </ClerkProvider>
