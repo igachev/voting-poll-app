@@ -28,6 +28,17 @@ export default function SignInForm() {
       // If sign-in process is complete, set the created session as active
       // and redirect the user
       if (signInAttempt.status === 'complete') {
+
+        const user = await fetch("/api/login", {
+          method: "POST",
+          body: JSON.stringify({email: email, password: password})
+        })
+        const userData = await user.json()
+        if(!userData) {
+          return
+        }
+        
+        localStorage.setItem("userData",JSON.stringify({id: userData.id, email: userData.email}))
         await setActive({ session: signInAttempt.createdSessionId });
         router.push('/create-vote');
       } else {
