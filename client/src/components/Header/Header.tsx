@@ -1,15 +1,22 @@
 "use client"
 import { SignedIn, useAuth, UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const Header = () => {
     let {isSignedIn} = useAuth()
+
+    useEffect(() => {
+      if(!isSignedIn) {
+        localStorage.removeItem("userData")
+      }
+    },[isSignedIn])
+
   return (
     <header>
           <nav>
             <ul>
-
+              <li><Link href="/">Home</Link></li>
               {isSignedIn && (
                 <>
                 <li>
