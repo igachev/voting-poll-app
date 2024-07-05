@@ -55,7 +55,19 @@ export default function Page() {
       // If verification was completed, set the session to active
       // and redirect the user
       if (completeSignUp.status === 'complete') {
+        const user = await fetch("/api/register", {
+          method: "POST",
+          body: JSON.stringify({email: emailAddress, password: password})
+        })
+        
+        const userData = await user.json()
+        if(!userData) {
+          return
+        }
+        
         await setActive({ session: completeSignUp.createdSessionId });
+       
+        localStorage.setItem("userData",JSON.stringify(userData))
         router.push('/create-vote');
       } else {
         // If the status is not complete, check why. User may need to
