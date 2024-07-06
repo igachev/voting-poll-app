@@ -15,14 +15,14 @@ const pool = mysql.createPool({
   }
 
   export async function getUser(userId: number) {
-    const result = await pool.query<ResultSetHeader>("SELECT * FROM `users` WHERE id=?",[userId])
+    const result = await pool.query<ResultSetHeader>("SELECT * FROM `users` WHERE user_id=?",[userId])
     const resultData: any = result[0]
-    const userData:{id:number;email:string} = {id: resultData[0].id, email: resultData[0].email}
+    const userData:{id:number;email:string} = {id: resultData[0].user_id, email: resultData[0].user_email}
     return userData
   }
 
   export async function isRegistered(email:string) {
-    const result = await pool.query<ResultSetHeader>("SELECT * FROM `users` WHERE email=?",[email])
+    const result = await pool.query<ResultSetHeader>("SELECT * FROM `users` WHERE user_email=?",[email])
     const userData: any = result[0]
     if(userData[0] != undefined) {
       return true;
@@ -31,18 +31,49 @@ const pool = mysql.createPool({
   }
 
   export async function registerUser(email:string, password: string) {
-    const result = await pool.query<ResultSetHeader>("INSERT INTO `users` (email,password) VALUES(?,?)",[email,password])
+    const result = await pool.query<ResultSetHeader>("INSERT INTO `users` (user_email,user_password) VALUES(?,?)",[email,password])
     const userId = result[0].insertId
     const userData:any = await getUser(userId)
     return userData
   }
 
   export async function loginUser(email: string, password: string) {
-    const result = await pool.query<ResultSetHeader>("SELECT * FROM `users` WHERE email=? AND password=?",[email,password])
+    const result = await pool.query<ResultSetHeader>("SELECT * FROM `users` WHERE user_email=? AND user_password=?",[email,password])
     const userData: any = result[0]
     if(userData[0] == undefined) {
       throw new Error("Invalid email or password!")
     }
     return userData[0]
+  }
+
+  export async function getPolls() {
+    const result = await pool.query<ResultSetHeader>(`SELECT * FROM polls`)
+    const pollsData: any = result[0]
+    const polls = []
+    for(let i = 0; i < pollsData.length; i++) {
+      const pollOptions = await getPollOptions(pollsData[i].poll_id)
+      polls.push({...pollsData[i],options:pollOptions})
+    }
+    return polls
+  }
+
+  export async function getPollOptions(pollId: number) {
+    const result = await pool.query<ResultSetHeader>(`
+      SELECT po.poll_option 
+      FROM polls p 
+      JOIN poll_options po 
+      ON p.poll_id = po.poll_id 
+      WHERE p.poll_id = ?`,[pollId])
+      const pollOptions: any = result[0]
+      return pollOptions
+  }
+
+  export async function pollVote(userId: number,pollId: number,selectedOption: string) {
+    const result = await pool.query<ResultSetHeader>(`
+      INSERT INTO poll_votes (user_id, poll_id, selected_option)
+            VALUES (?, ?, ?)
+      `,[userId,pollId,selectedOption])
+      const userVoted = result[0]
+      return userVoted
   }
   
