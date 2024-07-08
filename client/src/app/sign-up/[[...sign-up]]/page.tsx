@@ -68,7 +68,7 @@ export default function Page() {
         await setActive({ session: completeSignUp.createdSessionId });
        
         localStorage.setItem("userData",JSON.stringify(userData))
-        router.push('/create-vote');
+        router.push('/polls');
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.

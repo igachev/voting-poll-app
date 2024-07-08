@@ -40,7 +40,7 @@ export default function SignInForm() {
         
         localStorage.setItem("userData",JSON.stringify({id: userData.id, email: userData.email}))
         await setActive({ session: signInAttempt.createdSessionId });
-        router.push('/create-vote');
+        router.push('/polls');
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.

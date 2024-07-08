@@ -1,4 +1,6 @@
 "use client"
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 interface PollOption {
@@ -16,6 +18,7 @@ interface Poll {
 const Polls = () => {
 
     const [polls,setPolls] = useState<Poll[]>([])
+    const router = useRouter()
 
     useEffect(() => {
         async function fetchPolls() {
@@ -38,6 +41,9 @@ const Polls = () => {
             <div key={poll.poll_id}>
                 <h2>Poll: {poll.poll_title}</h2>
                 <p>Description: {poll.poll_description}</p>
+                <div>
+                    <Link href={`/polls/${poll.poll_id}`}>Details</Link>
+                </div>
             </div>
         ))}
     </div>

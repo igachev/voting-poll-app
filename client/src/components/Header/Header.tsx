@@ -17,6 +17,7 @@ const Header = () => {
           <nav>
             <ul>
               <li><Link href="/">Home</Link></li>
+              <li><Link href="/polls">Polls</Link></li>
               {isSignedIn && (
                 <>
                 <li>
@@ -24,6 +25,7 @@ const Header = () => {
                 <UserButton afterSignOutUrl="/" />
                 </SignedIn>
               </li>
+              <li><Link href="/create-poll">Create Poll</Link></li>
                 </>
               )}
 
