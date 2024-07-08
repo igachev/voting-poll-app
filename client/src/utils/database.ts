@@ -57,6 +57,14 @@ const pool = mysql.createPool({
     return polls
   }
 
+  export async function getPoll(pollId: number) {
+    const result = await pool.query<ResultSetHeader>(`SELECT * FROM polls WHERE poll_id=?`,[pollId])
+    const pollData: any = result[0]
+    const pollOptions = await getPollOptions(pollId)
+    const poll = {...pollData[0],pollOptions}
+    return poll
+  }
+
   export async function getPollOptions(pollId: number) {
     const result = await pool.query<ResultSetHeader>(`
       SELECT po.poll_option 
@@ -65,6 +73,9 @@ const pool = mysql.createPool({
       ON p.poll_id = po.poll_id 
       WHERE p.poll_id = ?`,[pollId])
       const pollOptions: any = result[0]
+      if(pollOptions.length === 0) {
+        throw new Error("There is no such poll!")
+      }
       return pollOptions
   }
 
