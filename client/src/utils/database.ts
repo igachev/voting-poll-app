@@ -79,6 +79,22 @@ const pool = mysql.createPool({
       return pollOptions
   }
 
+  export async function addPoll(pollTitle: string, pollDescription: string,userId: number) {
+    const result = await pool.query<ResultSetHeader>(`
+      INSERT INTO polls (poll_title,poll_description,user_id)
+      VALUES(?,?,?)
+      `,[pollTitle,pollDescription,userId])
+      return result[0].insertId
+  }
+
+  export async function addPollOption(pollOption: string,pollId: number) {
+    const result = await pool.query<ResultSetHeader>(`
+      INSERT INTO poll_options (poll_option,poll_id)
+      VALUES (?,?)
+      `,[pollOption,pollId])
+      return "Poll Option was added"
+  }
+
   export async function pollVote(userId: number,pollId: number,selectedOption: string) {
     const result = await pool.query<ResultSetHeader>(`
       INSERT INTO poll_votes (user_id, poll_id, selected_option)
