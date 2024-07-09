@@ -67,7 +67,7 @@ export default function Page() {
         
         await setActive({ session: completeSignUp.createdSessionId });
        
-        localStorage.setItem("userData",JSON.stringify(userData))
+        localStorage.setItem("userData",JSON.stringify({id: userData.id, email: userData.email}))
         router.push('/polls');
       } else {
         // If the status is not complete, check why. User may need to
