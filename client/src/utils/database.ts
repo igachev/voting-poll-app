@@ -95,6 +95,31 @@ const pool = mysql.createPool({
       return "Poll Option was added"
   }
 
+  export async function deletePoll(pollId: number, userId: number) {
+    
+      const checkForPollAndUser = await pool.query<ResultSetHeader>(`
+        SELECT * FROM polls
+        WHERE poll_id = ? AND user_id = ?
+        `,[pollId,userId])
+       const check: any = checkForPollAndUser[0]
+
+        if(check.length > 0) {
+          const result1 = await pool.query<ResultSetHeader>(`
+            DELETE FROM poll_options
+            WHERE poll_id = ?
+            `,[pollId])
+            const result2 = await pool.query<ResultSetHeader>(`
+              DELETE FROM polls
+              WHERE poll_id = ? AND user_id = ?
+              `,[pollId,userId])
+        
+             // console.log(result2[0])
+          return "Poll and its options were deleted"
+        }
+      
+        throw new Error("you cannot delete this item")
+  }
+
   export async function pollVote(userId: number,pollId: number,selectedOption: string) {
     const result = await pool.query<ResultSetHeader>(`
       INSERT INTO poll_votes (user_id, poll_id, selected_option)

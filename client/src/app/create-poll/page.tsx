@@ -12,7 +12,6 @@ const CreatePoll = () => {
   async function onCreatePoll(e: FormEvent) {
     e.preventDefault()
     const userData = localStorage?.getItem("userData")
-    console.log(userData)
     let userId = 0;
     if(userData) {
       const data = JSON.parse(userData)
