@@ -121,11 +121,25 @@ const pool = mysql.createPool({
   }
 
   export async function pollVote(userId: number,pollId: number,selectedOption: string) {
-    const result = await pool.query<ResultSetHeader>(`
-      INSERT INTO poll_votes (user_id, poll_id, selected_option)
-            VALUES (?, ?, ?)
-      `,[userId,pollId,selectedOption])
-      const userVoted = result[0]
-      return userVoted
+
+   const checkVote = await pool.query<ResultSetHeader>(`
+      SELECT * FROM poll_votes
+      WHERE user_id = ? AND poll_id = ?
+      `,[userId,pollId])
+
+      const ifAlreadyVoted: any = checkVote[0]
+    
+      if(ifAlreadyVoted.length > 0) {
+        throw new Error("You already voted in this poll!")
+      }
+      else {
+        const result = await pool.query<ResultSetHeader>(`
+          INSERT INTO poll_votes (user_id, poll_id, selected_option)
+                VALUES (?, ?, ?)
+          `,[userId,pollId,selectedOption])
+          const userVoted = result[0]
+          return userVoted
+      }
+    
   }
   
