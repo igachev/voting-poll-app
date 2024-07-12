@@ -23,6 +23,7 @@ const PollDetails = ({
     const [poll,setPoll] = useState<Poll | null>(null)
     const router = useRouter()
     const [error, setError] = useState<string | null>(null)
+    const [selectedOption,setSelectedOption] = useState<string>()
 
     async function deletePoll() {
       const userData = localStorage?.getItem("userData")
@@ -49,6 +50,31 @@ const PollDetails = ({
       }
     }
 
+    async function voteForPoll() {
+      const userData = localStorage?.getItem("userData")
+
+      let userId = 0;
+      if(userData) {
+        const data = JSON.parse(userData)
+        userId = parseInt(data.id)
+      }
+
+      try {
+        const response = await fetch(`/api/polls/${params.pollId}/${userId}`, {
+          method: "POST",
+          body: JSON.stringify({selectedOption})
+        })
+
+        if(!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.message)
+        }
+
+      } catch (err: any) {
+        setError(err.message)
+      }
+    }
+
     useEffect(() => {
         fetch(`/api/polls/${params.pollId}`)
         .then((data) => data.json())
@@ -66,7 +92,7 @@ const PollDetails = ({
           <h5>Description: {poll?.poll_description}</h5>
           <div>{poll?.pollOptions.length! > 0 && poll?.pollOptions.map((pollOption) => (
             <div key={pollOption.poll_option}>
-              <button>{pollOption.poll_option}</button>
+              <button onClick={() => setSelectedOption(pollOption.poll_option)}>{pollOption.poll_option}</button>
             </div>
           ))}</div>
         </section>
@@ -76,6 +102,7 @@ const PollDetails = ({
             <p>{error}</p>
           </div>
         )}
+        <button onClick={voteForPoll}>Vote</button>
     </div>
   )
 }
