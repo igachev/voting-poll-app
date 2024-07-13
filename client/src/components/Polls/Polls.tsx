@@ -25,7 +25,7 @@ const Polls = () => {
             try {
                 const response = await fetch("/api/polls")
                 const result = await response.json()
-                console.log(result)
+             //   console.log(result)
                 setPolls(result) 
             } catch (err) {
                 console.log(err)

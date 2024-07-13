@@ -143,3 +143,36 @@ const pool = mysql.createPool({
     
   }
   
+  export async function getVotes(pollId: number) {
+    const numberOfVotes: { [key: string]: number }[] = [];
+    const result = await pool.query<ResultSetHeader>(`
+      SELECT * FROM poll_votes
+      WHERE poll_id = ?
+      `,[pollId])
+      const votes:any = result[0]
+     // console.log(votes)
+      for(let i = 0; i < votes.length; i++) {
+        let count = await countSelectedOption(pollId,votes[i].selected_option)
+        let optionName:string = votes[i].selected_option
+        
+        let isOptionExist = numberOfVotes.find((obj) => obj[optionName] !== undefined)
+        let obj: { [key: string]: number } = {};
+        obj[optionName] = count;
+      //  console.log(isOptionExist)
+        if(isOptionExist == undefined) {
+        numberOfVotes.push(obj)
+        }
+      }
+      console.log(numberOfVotes)
+      return numberOfVotes;
+  }
+
+  export async function countSelectedOption(pollId: number, selectedOption: string) {
+    const result = await pool.query<ResultSetHeader>(`
+      SELECT count(*) as optionCount 
+      FROM poll_votes
+      WHERE poll_id = ? AND selected_option = ?
+      `,[pollId,selectedOption])
+      const option: any = result[0]
+      return option[0].optionCount
+  }
