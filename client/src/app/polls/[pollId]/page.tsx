@@ -14,6 +14,10 @@ interface Poll {
     pollOptions: PollOption[];
 }
 
+interface Vote {
+    [key: string]: number;
+}
+
 const PollDetails = ({
     params,
   }: {
@@ -24,6 +28,7 @@ const PollDetails = ({
     const router = useRouter()
     const [error, setError] = useState<string | null>(null)
     const [selectedOption,setSelectedOption] = useState<string>()
+    const [votes,setVotes] = useState<Vote[]>([])
 
     async function deletePoll() {
       const userData = localStorage?.getItem("userData")
@@ -82,7 +87,19 @@ const PollDetails = ({
         .catch((err) => console.log(err))
     },[])
 
-    console.log(poll)
+    useEffect(() => {
+      const userData = localStorage?.getItem("userData")
+
+      let userId = 0;
+      if(userData) {
+        const data = JSON.parse(userData)
+        userId = parseInt(data.id)
+      }
+      fetch(`/api/polls/${params.pollId}/${userId}`)
+      .then((response) => response.json())
+      .then((data) => setVotes(data))
+      .catch((err) => console.log(err))
+    },[])
 
   return (
     <div>
