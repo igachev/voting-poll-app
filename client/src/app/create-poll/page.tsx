@@ -1,6 +1,10 @@
 "use client"
+import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React, { FormEvent, useState } from 'react'
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+
 
 const CreatePoll = () => {
   const [isPollCreated,setIsPollCreated] = useState<boolean>(false)
@@ -36,24 +40,27 @@ const CreatePoll = () => {
   }
 
   return (
-    <div>
-      <h1>Create Poll</h1>
+    <div className='min-h-[800px] bg-stone-700 text-white'>
+      <h1 className='text-xl sm:text-4xl text-center pt-2 pb-3'>Create Poll</h1>
+
+      <h3 className='text-lg sm:text-2xl text-center font-light p-2'>After creating the poll, you can add as many voting options as you want.</h3>
+      <h5 className='text-md sm:text-xl text-center opacity-85 p-6'>Simply enter your option in the input field, press the Add button. After adding the desired number of options, press Return to Polls to check your poll.</h5>
 
       {!isPollCreated && (
-        <div>
-          <form method="post" onSubmit={onCreatePoll}>
-            <div>
-              <label htmlFor="pollTitle">Poll Title:</label>
-              <input type="text"
+        <div >
+          <form className='min-h-[500px] bg-slate-500 flex flex-col items-center justify-center gap-3' method="post" onSubmit={onCreatePoll}>
+            <div className='pl-2 pr-2'>
+              <Label htmlFor="pollTitle">Poll Title:</Label>
+              <Input type="text"
                name='pollTitle' 
                value={pollTitle} 
                onChange={(e) => setPollTitle(e.target.value)}
                 />
             </div>
 
-            <div>
-              <label htmlFor="pollDescription">Poll Description:</label>
-              <input 
+            <div className='pl-2 pr-2'>
+              <Label htmlFor="pollDescription">Poll Description:</Label>
+              <Input 
               type="text"
               name='pollDescription'
               value={pollDescription}
@@ -61,8 +68,8 @@ const CreatePoll = () => {
                />
             </div>
 
-            <div>
-              <button type='submit'>Create</button>
+            <div className='pl-2 pr-2'>
+              <Button variant="destructive" size="lg" type='submit'>Create</Button>
             </div>
           </form>
         </div>
@@ -70,26 +77,31 @@ const CreatePoll = () => {
 
       {isPollCreated && (
         <div>
-          <form method="post" onSubmit={onAddOption}>
-            <div>
-              <label htmlFor="pollOption">Option:</label>
-              <input 
+          <form method="post" onSubmit={onAddOption} className='flex flex-col justify-evenly items-center min-h-[500px] bg-slate-500'>
+            <div className='p-2'>
+              <Label htmlFor="pollOption" className=''>Add Option For The Created Poll:</Label>
+              <Input 
               type="text" 
               name='pollOption'
               value={pollOption}
               onChange={(e) => setPollOption(e.target.value)}
+              className='max-w-96 mt-2'
               />
             </div>
 
             <div>
-              <button type='submit'>Add Option</button>
+              <Button variant="default" type='submit'>Add Option</Button>
             </div>
           </form>
         </div>
       )}
 
-      <div>
-      <Link href="/polls">Go To Polls</Link>
+      <div className='text-center'>
+      <Button 
+      variant="link" 
+      className='text-white hover:text-orange-500 text-sm sm:text-2xl'>
+        <Link href="/polls">Return To Polls</Link>
+      </Button>
       </div>
 
     </div>
