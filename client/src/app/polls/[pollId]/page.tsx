@@ -1,4 +1,5 @@
 "use client"
+import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -29,6 +30,12 @@ const PollDetails = ({
     const [error, setError] = useState<string | null>(null)
     const [selectedOption,setSelectedOption] = useState<string>()
     const [votes,setVotes] = useState<Vote[]>([])
+    const [isClicked,setIsClicked] = useState<boolean>(false)
+
+   function onSelectedOption(selectedOption: string) {
+    setSelectedOption(selectedOption)
+    setIsClicked(true)
+    }
 
     async function deletePoll() {
       const userData = localStorage?.getItem("userData")
@@ -80,6 +87,7 @@ const PollDetails = ({
       }
     }
 
+    // get specified poll by id
     useEffect(() => {
         fetch(`/api/polls/${params.pollId}`)
         .then((data) => data.json())
@@ -87,6 +95,7 @@ const PollDetails = ({
         .catch((err) => console.log(err))
     },[])
 
+    // get the votes for the specified poll
     useEffect(() => {
       const userData = localStorage?.getItem("userData")
 
@@ -102,24 +111,34 @@ const PollDetails = ({
     },[])
 
   return (
-    <div>
-        <h1>Poll Details</h1>
-        <section>
+    <div className='min-h-[800px] bg-stone-700 text-white'>
+    <h1 className='text-4xl text-center p-2'>Poll Details</h1>
+    <div className='bg-stone-500 min-h-[500px] w-5/6 flex flex-col justify-center items-center mx-auto rounded-md'>
+        
+        <section className='w-5/6 bg-slate-500 p-4 flex flex-col justify-center items-center gap-3'>
           <h3>Title: {poll?.poll_title}</h3>
           <h5>Description: {poll?.poll_description}</h5>
           <div>{poll?.pollOptions.length! > 0 && poll?.pollOptions.map((pollOption) => (
-            <div key={pollOption.poll_option}>
-              <button onClick={() => setSelectedOption(pollOption.poll_option)}>{pollOption.poll_option}</button>
+            <div key={pollOption.poll_option} className='mb-2'>
+              <Button 
+              className={`${selectedOption === pollOption.poll_option ? 'bg-green-500 hover:bg-green-500' : null}`}
+              variant='default' 
+              onClick={() => onSelectedOption(pollOption.poll_option)}>{pollOption.poll_option}</Button>
             </div>
           ))}</div>
         </section>
-        <button onClick={deletePoll}>Delete Poll</button>
+        <Button variant="destructive" className='mb-2 mt-2' onClick={deletePoll}>Delete Poll</Button>
         {error && (
           <div>
             <p>{error}</p>
           </div>
         )}
-        <button onClick={voteForPoll}>Vote</button>
+        <Button 
+        variant="secondary" 
+        onClick={voteForPoll}
+        disabled={isClicked ? false: true}
+        >Vote</Button>
+    </div>
     </div>
   )
 }
