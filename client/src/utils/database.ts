@@ -17,7 +17,7 @@ const pool = mysql.createPool({
   export async function getUser(userId: number) {
     const result = await pool.query<ResultSetHeader>("SELECT * FROM `users` WHERE user_id=?",[userId])
     const resultData: any = result[0]
-    const userData:{id:number;email:string} = {id: resultData[0].user_id, email: resultData[0].user_email}
+    const userData:{user_id:number;user_email:string} = {user_id: resultData[0].user_id, user_email: resultData[0].user_email}
     return userData
   }
 
@@ -34,6 +34,7 @@ const pool = mysql.createPool({
     const result = await pool.query<ResultSetHeader>("INSERT INTO `users` (user_email,user_password) VALUES(?,?)",[email,password])
     const userId = result[0].insertId
     const userData:any = await getUser(userId)
+    console.log(userData)
     return userData
   }
 
@@ -73,9 +74,9 @@ const pool = mysql.createPool({
       ON p.poll_id = po.poll_id 
       WHERE p.poll_id = ?`,[pollId])
       const pollOptions: any = result[0]
-      if(pollOptions.length === 0) {
-        throw new Error("There is no such poll!")
-      }
+     // if(pollOptions.length === 0) {
+     //   throw new Error("There is no such poll!")
+     // }
       return pollOptions
   }
 
@@ -104,11 +105,16 @@ const pool = mysql.createPool({
        const check: any = checkForPollAndUser[0]
 
         if(check.length > 0) {
-          const result1 = await pool.query<ResultSetHeader>(`
+          // we must delete them in order from child to parent because we use foreign keys
+          const deleteFromPollVotes = await pool.query<ResultSetHeader>(`
+            DELETE FROM poll_votes
+            WHERE poll_id = ?
+            `,[pollId])
+          const deleteFromPollOptions = await pool.query<ResultSetHeader>(`
             DELETE FROM poll_options
             WHERE poll_id = ?
             `,[pollId])
-            const result2 = await pool.query<ResultSetHeader>(`
+            const deleteFromPolls = await pool.query<ResultSetHeader>(`
               DELETE FROM polls
               WHERE poll_id = ? AND user_id = ?
               `,[pollId,userId])
