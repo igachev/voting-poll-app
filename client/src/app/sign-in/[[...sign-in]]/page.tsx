@@ -34,11 +34,12 @@ export default function SignInForm() {
           body: JSON.stringify({email: email, password: password})
         })
         const userData = await user.json()
+    
         if(!userData) {
           return
         }
         
-        localStorage.setItem("userData",JSON.stringify({id: userData.id, email: userData.email}))
+        localStorage.setItem("userData",JSON.stringify({id: userData.user_id, email: userData.user_email}))
         await setActive({ session: signInAttempt.createdSessionId });
         router.push('/polls');
       } else {
