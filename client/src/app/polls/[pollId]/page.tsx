@@ -1,33 +1,9 @@
 "use client"
 import { Button } from '@/components/ui/button';
+import VoteChart from '@/components/VoteChart/VoteChart';
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState,PureComponent } from 'react'
-import { ResponsiveContainer, PieChart, Pie, Legend, Tooltip, Cell } from 'recharts';
 
-interface CustomizedLabelProps {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  percent: number;
-  index: number;
-}
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: CustomizedLabelProps) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
 
 interface PollOption {
     poll_option: string;
@@ -144,6 +120,17 @@ const PollDetails = ({
       .catch((err) => console.log(err))
     },[])
 
+    // show / hide error message for 4 sec
+    useEffect(() => {
+      const interval = setTimeout(() => {
+          setError("")
+      }, 4000);
+
+      return (() => {
+        clearTimeout(interval)
+      })
+    },[error])
+
   return (
     <div className='min-h-[800px] bg-stone-700 text-white'>
     <h1 className='text-2xl sm:text-4xl text-center p-2'>Poll Details</h1>
@@ -157,13 +144,17 @@ const PollDetails = ({
               <Button 
               className={`${selectedOption === pollOption.poll_option ? 'bg-green-500 hover:bg-green-500' : null}`}
               variant='default' 
-              onClick={() => onSelectedOption(pollOption.poll_option)}>{pollOption.poll_option}</Button>
+              onClick={() => onSelectedOption(pollOption.poll_option)}
+              >
+              {pollOption.poll_option}
+              </Button>
             </div>
           ))}</div>
         </section>
         <Button variant="destructive" className='mb-2 mt-2' onClick={deletePoll}>Delete Poll</Button>
         {error && (
-          <div>
+          // error container
+          <div className='bg-red-700 border rounded-md p-4 mb-2'>
             <p>{error}</p>
           </div>
         )}
@@ -174,27 +165,7 @@ const PollDetails = ({
         >Vote</Button>
     </div>
 
-    <div style={{ width: '100%', height: 300 }}>
-        <ResponsiveContainer>
-          <PieChart>
-          <Pie
-            data={votes}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={renderCustomizedLabel}
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {votes.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+    <VoteChart votes={votes} />
 
     </div>
   )
