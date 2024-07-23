@@ -2,9 +2,8 @@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React, { FormEvent, useEffect, useState } from 'react'
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-
+import CreatePollForm from '@/components/CreatePollForm/CreatePollForm'
+import CreateOptionForm from '@/components/CreateOptionForm/CreateOptionForm'
 
 const CreatePoll = () => {
   const [isPollCreated,setIsPollCreated] = useState<boolean>(false)
@@ -75,55 +74,21 @@ const CreatePoll = () => {
         </div>
       )}
 
-      {!isPollCreated && (
-        <div >
-          <form className='min-h-[500px] bg-slate-500 flex flex-col items-center justify-center gap-3' method="post" onSubmit={onCreatePoll}>
-            <div className='pl-2 pr-2'>
-              <Label htmlFor="pollTitle">Poll Title:</Label>
-              <Input type="text"
-               name='pollTitle' 
-               value={pollTitle} 
-               onChange={(e) => setPollTitle(e.target.value)}
-                />
-            </div>
+      <CreatePollForm
+      isPollCreated={isPollCreated}
+      onCreatePoll={onCreatePoll}
+      pollTitle={pollTitle}
+      setPollTitle={setPollTitle}
+      pollDescription={pollDescription}
+      setPollDescription={setPollDescription}
+      />
 
-            <div className='pl-2 pr-2'>
-              <Label htmlFor="pollDescription">Poll Description:</Label>
-              <Input 
-              type="text"
-              name='pollDescription'
-              value={pollDescription}
-              onChange={(e) => setPollDescription(e.target.value)}
-               />
-            </div>
-
-            <div className='pl-2 pr-2'>
-              <Button variant="destructive" size="lg" type='submit'>Create</Button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {isPollCreated && (
-        <div>
-          <form method="post" onSubmit={onAddOption} className='flex flex-col justify-evenly items-center min-h-[500px] bg-slate-500'>
-            <div className='p-2'>
-              <Label htmlFor="pollOption" className=''>Add Option For The Created Poll:</Label>
-              <Input 
-              type="text" 
-              name='pollOption'
-              value={pollOption}
-              onChange={(e) => setPollOption(e.target.value)}
-              className='max-w-96 mt-2'
-              />
-            </div>
-
-            <div>
-              <Button variant="default" type='submit'>Add Option</Button>
-            </div>
-          </form>
-        </div>
-      )}
+     <CreateOptionForm 
+     isPollCreated={isPollCreated}
+     onAddOption={onAddOption}
+     pollOption={pollOption}
+     setPollOption={setPollOption}
+     />
 
       <div className='text-center'>
       <Button 
