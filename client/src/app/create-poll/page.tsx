@@ -1,7 +1,7 @@
 "use client"
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 
@@ -12,6 +12,18 @@ const CreatePoll = () => {
   const [pollTitle,setPollTitle] = useState<string>("")
   const [pollDescription,setPollDescription] = useState<string>("")
   const [pollOption,setPollOption] = useState<string>("")
+  const [successMessage,setSuccessMessage] = useState<string>()
+
+  // hide success message after 4 sec
+  useEffect(() => {
+    const interval = setTimeout(() => {
+        setSuccessMessage("")
+    }, 4000);
+
+    return (() => {
+      clearTimeout(interval)
+    })
+  },[successMessage])
 
   async function onCreatePoll(e: FormEvent) {
     e.preventDefault()
@@ -26,6 +38,11 @@ const CreatePoll = () => {
       method: "POST",
       body: JSON.stringify({pollTitle,pollDescription,userId})
     })
+
+    if(response.ok) {
+      setSuccessMessage("Poll Created.Add Your Options Now.")
+    }
+
     const id = await response.json()
     setPollId(id)
     setIsPollCreated(true)
@@ -37,6 +54,12 @@ const CreatePoll = () => {
       method: "POST",
       body: JSON.stringify({pollOption,pollId})
     })
+
+    if(response.ok) {
+      setSuccessMessage("The Option Was Added")
+      setPollOption("")
+    }
+
   }
 
   return (
@@ -45,6 +68,12 @@ const CreatePoll = () => {
 
       <h3 className='text-lg sm:text-2xl text-center font-light p-2'>After creating the poll, you can add as many voting options as you want.</h3>
       <h5 className='text-md sm:text-xl text-center opacity-85 p-6'>Simply enter your option in the input field, press the Add button. After adding the desired number of options, press Return to Polls to check your poll.</h5>
+
+      {successMessage && (
+        <div className='bg-green-700 border rounded-md p-4 mb-2 w-3/6 mx-auto text-center'>
+          {successMessage}
+        </div>
+      )}
 
       {!isPollCreated && (
         <div >
