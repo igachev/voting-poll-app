@@ -47,7 +47,7 @@ const Polls = () => {
     }, [])
 
     return (
-        <div className='flex flex-col w-11/12 mx-auto bg-slate-300 p-4 min-h-[700px] overflow-y-scroll rounded-lg shadow-sm shadow-red-200'>
+        <div className='flex flex-col w-11/12 mx-auto bg-slate-300 p-4 h-[700px] overflow-y-scroll rounded-lg shadow-sm shadow-red-200'>
             {polls.length > 0 && polls.map((poll) => (
                 <Card key={poll.poll_id} className='max-w-3/6 mb-2 bg-orange-700 text-white font-light opacity-80'>
                     <CardHeader className='text-center'>
