@@ -107,14 +107,8 @@ const PollDetails = ({
 
     // get the votes for the specified poll
     useEffect(() => {
-      const userData = localStorage?.getItem("userData")
-
-      let userId = 0;
-      if(userData) {
-        const data = JSON.parse(userData)
-        userId = parseInt(data.id)
-      }
-      fetch(`/api/polls/${params.pollId}/${userId}`)
+      
+      fetch(`/api/polls/${params.pollId}/votes`)
       .then((response) => response.json())
       .then((data) => setVotes(data))
       .catch((err) => console.log(err))
