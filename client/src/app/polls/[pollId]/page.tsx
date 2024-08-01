@@ -1,6 +1,7 @@
 "use client"
 import { Button } from '@/components/ui/button';
 import VoteChart from '@/components/VoteChart/VoteChart';
+import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState,PureComponent } from 'react'
 
@@ -38,6 +39,7 @@ const PollDetails = ({
     const [selectedOption,setSelectedOption] = useState<string>()
     const [votes,setVotes] = useState<FormatVote[]>([])
     const [isClicked,setIsClicked] = useState<boolean>(false)
+    let { isSignedIn } = useAuth()
 
    function onSelectedOption(selectedOption: string) {
     setSelectedOption(selectedOption)
@@ -145,18 +147,34 @@ const PollDetails = ({
             </div>
           ))}</div>
         </section>
-        <Button variant="destructive" className='mb-2 mt-2' onClick={deletePoll}>Delete Poll</Button>
+        
+          {isSignedIn && (
+            <Button 
+            variant="destructive" 
+            className='mb-2 mt-2' 
+            onClick={deletePoll}
+            >
+              Delete Poll
+            </Button>
+          )}
+
         {error && (
           // error container
           <div className='bg-red-700 border rounded-md p-4 mb-2'>
             <p>{error}</p>
           </div>
         )}
-        <Button 
-        variant="secondary" 
-        onClick={voteForPoll}
-        disabled={isClicked ? false: true}
-        >Vote</Button>
+       
+        {isSignedIn && (
+           <Button 
+           variant="secondary" 
+           onClick={voteForPoll}
+           disabled={isClicked ? false: true}
+           >
+            Vote
+           </Button>
+        )}
+
     </div>
 
     <VoteChart votes={votes} />
