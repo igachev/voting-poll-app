@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { useSignIn } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
@@ -56,31 +58,33 @@ export default function SignInForm() {
 
   // Display a form to capture the user's email and password
   return (
-    <>
-      <h1>Sign in</h1>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <div>
-          <label htmlFor="email">Enter email address</label>
-          <input
+    <div className='min-h-[800px] bg-stone-700 text-white flex flex-col items-center justify-center'>
+      <h1 className='text-3xl sm:text-4xl pb-2'>Sign in</h1>
+      <form onSubmit={(e) => handleSubmit(e)} className='flex flex-col w-5/6 min-h-[400px] bg-slate-800 p-3 gap-2 items-center justify-center'>
+        <div className='w-full sm:w-2/6 md:w-3/6 text-center'>
+          <label htmlFor="email" className='text-lg sm:text-xl'>Enter email address</label>
+          <Input
             onChange={(e) => setEmail(e.target.value)}
             id="email"
             name="email"
             type="email"
             value={email}
+            className=''
           />
         </div>
-        <div>
-          <label htmlFor="password">Enter password</label>
-          <input
+        <div className='w-full sm:w-2/6 md:w-3/6 text-center'>
+          <label htmlFor="password" className='text-lg sm:text-xl'>Enter password</label>
+          <Input
             onChange={(e) => setPassword(e.target.value)}
             id="password"
             name="password"
             type="password"
             value={password}
+            className=''
           />
         </div>
-        <button type="submit">Sign in</button>
+        <Button type="submit" className='w-4/6 sm:w-2/6' variant={"secondary"}>Sign in</Button>
       </form>
-    </>
+    </div>
   );
 }
