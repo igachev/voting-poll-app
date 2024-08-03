@@ -5,11 +5,15 @@ import { useSignIn } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle } from 'lucide-react';
+
 
 export default function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [error,setError] = React.useState('')
   const router = useRouter();
 
   // Handle the submission of the sign-in form
@@ -42,6 +46,7 @@ export default function SignInForm() {
         }
         
         localStorage.setItem("userData",JSON.stringify({id: userData.user_id, email: userData.user_email}))
+        setError("")
         await setActive({ session: signInAttempt.createdSessionId });
         router.push('/polls');
       } else {
@@ -53,6 +58,7 @@ export default function SignInForm() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+      setError(err.errors[0].message)
     }
   };
 
@@ -69,7 +75,7 @@ export default function SignInForm() {
             name="email"
             type="email"
             value={email}
-            className=''
+            className='text-sm sm:text-base md:text-xl'
           />
         </div>
         <div className='w-full sm:w-2/6 md:w-3/6 text-center'>
@@ -80,11 +86,25 @@ export default function SignInForm() {
             name="password"
             type="password"
             value={password}
-            className=''
+            className='text-sm sm:text-base md:text-xl'
           />
         </div>
         <Button type="submit" className='w-4/6 sm:w-2/6' variant={"secondary"}>Sign in</Button>
+
+    {error ? (
+      <Alert variant="destructive" className='max-w-[300px] sm:max-w-[300px] md:max-w-[600px] flex flex-col flex-wrap items-center justify-center'>
+      <AlertCircle className="h-4 w-4" />
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>
+        {error}
+      </AlertDescription>
+    </Alert>
+    ): null}
+
       </form>
+
+      
+
     </div>
   );
 }
