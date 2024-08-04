@@ -3,6 +3,9 @@
 import * as React from 'react';
 import { useSignUp } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 export default function Page() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -84,51 +87,56 @@ export default function Page() {
   // Display the verification form to capture the OTP code
   if (verifying) {
     return (
-      <>
-        <h1>Verify your email</h1>
-        <form onSubmit={handleVerify}>
-          <label id="code">Enter your verification code</label>
-          <input
+      <div className='min-h-[800px] bg-stone-700 text-white flex flex-col items-center justify-center'>
+        <h1 className='text-3xl sm:text-4xl pb-2'>Verify your email</h1>
+        <form onSubmit={handleVerify} className='flex flex-col w-5/6 min-h-[400px] bg-slate-800 p-3 gap-2 items-center justify-center'>
+          <div className='w-full sm:w-2/6 md:w-3/6 text-center'>
+          <Label id="code" className='text-lg sm:text-xl'>Enter your verification code</Label>
+          <Input
             value={code}
             id="code"
             name="code"
             onChange={(e) => setCode(e.target.value)}
+            className='text-sm sm:text-base md:text-xl'
           />
-          <button type="submit">Verify</button>
+          </div>
+          <Button className='w-4/6 sm:w-2/6' variant={"secondary"} type="submit">Verify</Button>
         </form>
-      </>
+      </div>
     );
   }
 
   // Display the initial sign-up form to capture the email and password
   return (
-    <>
-      <h1>Sign up</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Enter email address</label>
-          <input
+    <div className='min-h-[800px] bg-stone-700 text-white flex flex-col items-center justify-center'>
+      <h1 className='text-3xl sm:text-4xl pb-2'>Sign up</h1>
+      <form onSubmit={handleSubmit} className='flex flex-col w-5/6 min-h-[400px] bg-slate-800 p-3 gap-2 items-center justify-center'>
+        <div className='w-full sm:w-2/6 md:w-3/6 text-center'>
+          <Label htmlFor="email" className='text-lg sm:text-xl'>Enter email address</Label>
+          <Input
             id="email"
             type="email"
             name="email"
             value={emailAddress}
             onChange={(e) => setEmailAddress(e.target.value)}
+            className='text-sm sm:text-base md:text-xl'
           />
         </div>
-        <div>
-          <label htmlFor="password">Enter password</label>
-          <input
+        <div className='w-full sm:w-2/6 md:w-3/6 text-center'>
+          <Label htmlFor="password" className='text-lg sm:text-xl'>Enter password</Label>
+          <Input
             id="password"
             type="password"
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className='text-sm sm:text-base md:text-xl'
           />
         </div>
-        <div>
-          <button type="submit">Next</button>
-        </div>
+        
+          <Button className='w-4/6 sm:w-2/6' variant={"secondary"} type="submit">Next</Button>
+        
       </form>
-    </>
+    </div>
   );
 }
