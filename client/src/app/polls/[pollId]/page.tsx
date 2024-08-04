@@ -92,7 +92,20 @@ const PollDetails = ({
         }
 
         const newVote: FormatVote = {name: selectedOption!,value: 1}
-        setVotes((oldVotes) => [...oldVotes,newVote])
+        
+        setVotes((oldVotes) => {
+          let optionName = newVote.name;
+          let isOptionExists = oldVotes.find((obj) => obj.name === optionName);
+        
+          if (isOptionExists) {
+            // Update the value of the existing object
+            return oldVotes.map((obj) =>
+              obj.name === optionName ? { ...obj, value: obj.value + 1 } : obj
+            );
+          } 
+            // Add the new vote object
+            return [...oldVotes, newVote];
+        })
 
       } catch (err: any) {
         setError(err.message)
