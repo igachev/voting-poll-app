@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 export default function Page() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -13,6 +15,7 @@ export default function Page() {
   const [password, setPassword] = React.useState('');
   const [verifying, setVerifying] = React.useState(false);
   const [code, setCode] = React.useState('');
+  const [errorMessage,setErrorMessage] = React.useState('')
   const router = useRouter();
 
   // Handle submission of the sign-up form
@@ -36,10 +39,12 @@ export default function Page() {
       // Set 'verifying' true to display second form
       // and capture the OTP code
       setVerifying(true);
+      setErrorMessage("")
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+      setErrorMessage(err.errors[0].message)
     }
   };
 
@@ -72,6 +77,7 @@ export default function Page() {
        
         localStorage.setItem("userData",JSON.stringify({id: userData.user_id, email: userData.user_email}))
         router.push('/polls');
+        setErrorMessage("")
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
@@ -81,6 +87,7 @@ export default function Page() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error('Error:', JSON.stringify(err, null, 2));
+      setErrorMessage(err.errors[0].message)
     }
   };
 
@@ -101,6 +108,17 @@ export default function Page() {
           />
           </div>
           <Button className='w-4/6 sm:w-2/6' variant={"secondary"} type="submit">Verify</Button>
+
+          {errorMessage ? (
+      <Alert variant="destructive" className='max-w-[300px] sm:max-w-[300px] md:max-w-[600px] flex flex-col flex-wrap items-center justify-center'>
+      <AlertCircle className="h-4 w-4" />
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>
+        {errorMessage}
+        </AlertDescription>
+        </Alert>
+          ): null}
+
         </form>
       </div>
     );
@@ -135,6 +153,16 @@ export default function Page() {
         </div>
         
           <Button className='w-4/6 sm:w-2/6' variant={"secondary"} type="submit">Next</Button>
+
+          {errorMessage ? (
+      <Alert variant="destructive" className='max-w-[300px] sm:max-w-[300px] md:max-w-[600px] flex flex-col flex-wrap items-center justify-center'>
+      <AlertCircle className="h-4 w-4" />
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>
+        {errorMessage}
+      </AlertDescription>
+    </Alert>
+    ): null}
         
       </form>
     </div>
