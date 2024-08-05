@@ -94,3 +94,22 @@ MYSQL_DATABASE='votedb' <br>
 8. Start the app: `npm run dev`
 
 
+## Endpoints:
+- `POST /api/register` : <span>creates new user</span>
+- `POST /api/login` : <span>sign in existing user</span>
+- `POST /api/add-poll` : <span>creates new poll</span>
+- `POST /api/add-poll/add-options` : <span>adds voting options to particular poll</span>
+- `GET /api/polls` : <span>returns all polls</span>
+- `GET /api/polls/:pollId` : <span>returns particular poll</span>
+- `POST /api/polls/:pollId/:userId` : <span>the user votes with his selected option</span>
+- `DELETE /api/polls/:pollId/:userId` : <span>the user and owner of the poll deletes it</span>
+- `GET /api/polls/:pollId/votes` : <span>returns the votes for particular poll</span>
+
+
+## Routes:
+- `/` : <span>Home Page</span>
+- `/sign-up` : <span>Register Page</span>
+- `/sign-in` : <span>Login Page</span>
+- `/create-poll` : <span>Create Poll Page.The user creates a poll and adds as many options to it as he wants.</span>
+- `/polls`: <span>Polls Page.Displays the list of polls</span>
+- `/polls/:pollId` : <span>Poll Details Page.Shows particular poll.</span>
