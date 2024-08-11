@@ -113,3 +113,68 @@ MYSQL_DATABASE='votedb' <br>
 - `/create-poll` : <span>Create Poll Page.The user creates a poll and adds as many options to it as he wants.</span>
 - `/polls`: <span>Polls Page.Displays the list of polls</span>
 - `/polls/:pollId` : <span>Poll Details Page.Shows particular poll.</span>
+
+
+## Images and How It Works:
+<div align="center">
+  <p>Home Page.It contains carousel.Use the arrows buttons to move carousel items right and left.</p>
+
+![01 home](https://github.com/user-attachments/assets/c63a2579-894d-4582-8b54-a476797039aa)
+
+</div>
+
+<div align="center">
+  <p>List Of Polls</p>
+
+  ![02 Polls](https://github.com/user-attachments/assets/257aed7d-688d-4837-80e1-1471429397a0)
+
+</div>
+
+<div align="center">
+  <p>Create Poll.Only logged in users can create polls.After you add the poll title and description another form will appear to add the options.</p>
+
+  ![03 create-1](https://github.com/user-attachments/assets/c2ab678b-e08f-433c-8997-2448daf6c0f3)
+
+</div>
+
+<div align="center">
+  <p>Creating Poll Options</p>
+
+  ![04 create-2](https://github.com/user-attachments/assets/1dae9692-40bc-4120-9272-5e17acae42e4)
+
+</div>
+
+<div align="center">
+  <p>Poll Details.Voting results are shown as a chart.</p>
+
+  ![05 poll-details](https://github.com/user-attachments/assets/40aa4f81-5e64-430b-9fe6-5f3cc77b4aa6)
+
+</div>
+
+<div align="center">
+  <p>Displays an error message if the user tries to vote more than once.</p>
+
+  ![06 already-voted](https://github.com/user-attachments/assets/e0ea090a-39ce-409b-b2bc-6cb71345d5d0)
+
+</div>
+
+<div align="center">
+  <p>The application is web responsive</p>
+
+  ![07 responsive](https://github.com/user-attachments/assets/e1f781b1-e860-4286-965d-6be7a85b7ce3)
+
+</div>
+
+<div align="center">
+  <p>Login Page</p>
+
+  ![08 login](https://github.com/user-attachments/assets/5b22838f-179d-4226-9e22-da9882b18451)
+
+</div>
+
+<div align="center">
+  <p>Displays error message if the user enters invalid credentials.</p>
+
+  ![09 login-validation](https://github.com/user-attachments/assets/63264e04-f3de-4b5d-8a12-455b7af2347c)
+
+</div>
